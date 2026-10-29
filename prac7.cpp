@@ -1,55 +1,131 @@
+
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 // Base class
-class Student
+class Payment
 {
+protected:
+      double amount;
+
 public:
-      // Virtual function
-      virtual void display()
+      // Constructor
+      Payment(double a)
       {
-            cout << "Student Details" << endl;
+            amount = a;
+      }
+
+      // Virtual function for runtime polymorphism
+      virtual void processPayment()
+      {
+            cout << "Processing payment..." << endl;
+      }
+
+      // Virtual destructor
+      virtual ~Payment()
+      {
+            // Base class cleanup
       }
 };
 
 // Derived class 1
-class AIMLStudent : public Student
+class UpiPayment : public Payment
 {
 public:
-      void display() override
+      UpiPayment(double a) : Payment(a) {}
+
+      void processPayment() override
       {
-            cout << "Branch: Artificial Intelligence and Machine Learning" << endl;
+            cout << "Payment Method: UPI" << endl;
+            cout << "Amount Paid: Rs. "
+                 << fixed << setprecision(2) << amount << endl;
+            cout << "UPI payment successful." << endl;
       }
 };
 
 // Derived class 2
-class DataScienceStudent : public Student
+class CardPayment : public Payment
 {
 public:
-      void display() override
+      CardPayment(double a) : Payment(a) {}
+
+      void processPayment() override
       {
-            cout << "Branch: Data Science" << endl;
+            cout << "Payment Method: Debit/Credit Card" << endl;
+            cout << "Amount Paid: Rs. "
+                 << fixed << setprecision(2) << amount << endl;
+            cout << "Card payment successful." << endl;
+      }
+};
+
+// Derived class 3
+class CashPayment : public Payment
+{
+public:
+      CashPayment(double a) : Payment(a) {}
+
+      void processPayment() override
+      {
+            cout << "Payment Method: Cash" << endl;
+            cout << "Amount Paid: Rs. "
+                 << fixed << setprecision(2) << amount << endl;
+            cout << "Cash payment successful." << endl;
       }
 };
 
 int main()
 {
-      Student *ptr;
+      int choice;
+      double amount;
 
-      Student s;
-      AIMLStudent a;
-      DataScienceStudent d;
+      cout << "===== PAYMENT PROCESSING SYSTEM =====" << endl;
+      cout << "1. UPI Payment" << endl;
+      cout << "2. Card Payment" << endl;
+      cout << "3. Cash Payment" << endl;
 
-      cout << "Runtime Polymorphism" << endl;
+      cout << "Enter payment method (1-3): ";
+      if (!(cin >> choice))
+      {
+            cout << "Invalid input." << endl;
+            return 1;
+      }
 
-      ptr = &s;
-      ptr->display();
+      if (choice < 1 || choice > 3)
+      {
+            cout << "Invalid payment method." << endl;
+            return 1;
+      }
 
-      ptr = &a;
-      ptr->display();
+      cout << "Enter payment amount (Rs.): ";
+      if (!(cin >> amount) || amount <= 0)
+      {
+            cout << "Invalid payment amount." << endl;
+            return 1;
+      }
 
-      ptr = &d;
-      ptr->display();
+      Payment *payment = nullptr;
+
+      // Create the appropriate derived object
+      switch (choice)
+      {
+      case 1:
+            payment = new UpiPayment(amount);
+            break;
+
+      case 2:
+            payment = new CardPayment(amount);
+            break;
+
+      case 3:
+            payment = new CashPayment(amount);
+            break;
+      }
+
+      // Runtime polymorphism
+      payment->processPayment();
+
+      delete payment;
 
       return 0;
 }

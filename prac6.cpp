@@ -1,145 +1,221 @@
 
 #include <iostream>
+#include <string>
 using namespace std;
 
-// 1. Single Inheritance
-class Student
+// Base class
+class Person
 {
+protected:
+      string name;
+      int id;
+
 public:
-      void displayStudent()
+      Person(string n = "Student", int i = 0)
       {
-            cout << "Student Details" << endl;
+            name = n;
+            id = i;
+            cout << "Person constructor called" << endl;
+      }
+
+      void displayPerson()
+      {
+            cout << "Name: " << name << endl;
+            cout << "Student ID: " << id << endl;
+      }
+
+      ~Person()
+      {
+            cout << "Person destructor called" << endl;
       }
 };
 
-class Marks : public Student
+// 1. Single Inheritance
+class Student : public Person
 {
+protected:
+      string branch;
+
 public:
-      void displayMarks()
+      Student(string n, int i, string b)
+          : Person(n, i)
       {
-            cout << "Marks: 85" << endl;
+            branch = b;
+            cout << "Student constructor called" << endl;
+      }
+
+      void displayStudent()
+      {
+            displayPerson();
+            cout << "Branch: " << branch << endl;
+      }
+
+      ~Student()
+      {
+            cout << "Student destructor called" << endl;
       }
 };
 
 // 2. Multilevel Inheritance
-class Result : public Marks
+class AcademicRecord : public Student
 {
+protected:
+      float marks;
+
 public:
-      void displayResult()
+      AcademicRecord(string n, int i, string b, float m)
+          : Student(n, i, b)
       {
-            cout << "Result: Pass" << endl;
+            marks = m;
+            cout << "AcademicRecord constructor called" << endl;
+      }
+
+      void displayAcademic()
+      {
+            displayStudent();
+            cout << "Marks: " << marks << endl;
+      }
+
+      ~AcademicRecord()
+      {
+            cout << "AcademicRecord destructor called" << endl;
       }
 };
 
 // 3. Multiple Inheritance
 class Attendance
 {
+protected:
+      float attendance;
+
 public:
+      Attendance(float a)
+      {
+            attendance = a;
+            cout << "Attendance constructor called" << endl;
+      }
+
       void displayAttendance()
       {
-            cout << "Attendance: 90%" << endl;
+            cout << "Attendance: " << attendance << "%" << endl;
+      }
+
+      ~Attendance()
+      {
+            cout << "Attendance destructor called" << endl;
       }
 };
 
-class Report : public Marks, public Attendance
+class StudentReport : public AcademicRecord, public Attendance
 {
 public:
+      StudentReport(string n, int i, string b, float m, float a)
+          : AcademicRecord(n, i, b, m), Attendance(a)
+      {
+            cout << "StudentReport constructor called" << endl;
+      }
+
       void displayReport()
       {
-            cout << "Student Report Generated" << endl;
+            displayAcademic();
+            displayAttendance();
+            cout << "Student report generated." << endl;
       }
 };
 
 // 4. Hierarchical Inheritance
-class ScienceStudent : public Student
+class ResearchStudent : public Person
 {
 public:
-      void displayScience()
+      ResearchStudent(string n, int i) : Person(n, i) {}
+
+      void displayResearch()
       {
-            cout << "Branch: Computer Science (AIML)" << endl;
+            cout << "Research student: " << name << endl;
+            cout << "Research ID: " << id << endl;
       }
 };
 
-class EngineeringStudent : public Student
+class InternshipStudent : public Person
 {
 public:
-      void displayEngineering()
+      InternshipStudent(string n, int i) : Person(n, i) {}
+
+      void displayInternship()
       {
-            cout << "Course: Engineering" << endl;
+            cout << "Internship student: " << name << endl;
+            cout << "Student ID: " << id << endl;
       }
 };
 
 // 5. Hybrid Inheritance
-class Person
+class AcademicSkills : virtual public Person
 {
 public:
-      void displayPerson()
+      AcademicSkills(string n, int i) : Person(n, i) {}
+
+      void displayAcademicSkills()
       {
-            cout << "Person: Student" << endl;
+            cout << "Academic skills: Programming and Mathematics" << endl;
       }
 };
 
-class Academic : virtual public Person
+class TechnicalSkills : virtual public Person
 {
 public:
-      void displayAcademic()
+      TechnicalSkills(string n, int i) : Person(n, i) {}
+
+      void displayTechnicalSkills()
       {
-            cout << "Academic Record Available" << endl;
+            cout << "Technical skills: AI and Machine Learning" << endl;
       }
 };
 
-class Technical : virtual public Person
+class AIMLStudent : public AcademicSkills, public TechnicalSkills
 {
 public:
-      void displayTechnical()
+      AIMLStudent(string n, int i)
+          : Person(n, i),
+            AcademicSkills(n, i),
+            TechnicalSkills(n, i)
       {
-            cout << "Technical Skills: C++" << endl;
+            cout << "AIMLStudent constructor called" << endl;
       }
-};
 
-class AIMLStudent : public Academic, public Technical
-{
-public:
-      void displayAIML()
+      void displayAIMLStudent()
       {
-            cout << "Specialization: Artificial Intelligence and Machine Learning" << endl;
+            displayPerson();
+            displayAcademicSkills();
+            displayTechnicalSkills();
       }
 };
 
 int main()
 {
-      cout << "--- Single Inheritance ---" << endl;
-      Marks m;
-      m.displayStudent();
-      m.displayMarks();
+      cout << "\n===== 1. SINGLE INHERITANCE =====" << endl;
+      Student s1("Rahul", 101, "CSE AIML");
+      s1.displayStudent();
 
-      cout << "\n--- Multilevel Inheritance ---" << endl;
-      Result r;
-      r.displayStudent();
-      r.displayMarks();
-      r.displayResult();
+      cout << "\n===== 2. MULTILEVEL INHERITANCE =====" << endl;
+      AcademicRecord s2("Priya", 102, "CSE AIML", 85);
+      s2.displayAcademic();
 
-      cout << "\n--- Multiple Inheritance ---" << endl;
-      Report rp;
-      rp.displayMarks();
-      rp.displayAttendance();
-      rp.displayReport();
+      cout << "\n===== 3. MULTIPLE INHERITANCE =====" << endl;
+      StudentReport s3("Amit", 103, "CSE AIML", 90, 95);
+      s3.displayReport();
 
-      cout << "\n--- Hierarchical Inheritance ---" << endl;
-      ScienceStudent s;
-      s.displayStudent();
-      s.displayScience();
+      cout << "\n===== 4. HIERARCHICAL INHERITANCE =====" << endl;
+      ResearchStudent s4("Neha", 104);
+      s4.displayResearch();
 
-      EngineeringStudent e;
-      e.displayStudent();
-      e.displayEngineering();
+      InternshipStudent s5("Rohan", 105);
+      s5.displayInternship();
 
-      cout << "\n--- Hybrid Inheritance ---" << endl;
-      AIMLStudent a;
-      a.displayPerson();
-      a.displayAcademic();
-      a.displayTechnical();
-      a.displayAIML();
+      cout << "\n===== 5. HYBRID INHERITANCE =====" << endl;
+      AIMLStudent s6("Ananya", 106);
+      s6.displayAIMLStudent();
+
+      cout << "\n===== END OF PROGRAM =====" << endl;
 
       return 0;
 }
